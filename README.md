@@ -135,17 +135,39 @@ Get a list of popular and high-performing ETFs (ESGV, QQQM, FTEC, SOXQ, VGK, IAU
 - **Method:** `GET`
 - **Response:** A JSON array of ETF quote objects.
 
+## ⚡ Performance Features
+
+### 💾 Level 1 Caching
+The application implements an in-memory caching system to reduce latency and API calls to Yahoo Finance. 
+
+- **Global Cache**: Registered at `AppModule` level.
+- **Granular TTLs**: Each data type has its own expiration time (from 30s for reports to 24h for profiles).
+- **Centralized Config**: All TTLs and Swagger labels are managed from `src/common/constants/cache.constants.ts`.
+
+### 📝 Real-time Cache Logging
+The application logs every request state to the console, including hits, misses, and exact expiration times:
+
+`[CoreDataService] Cache HIT [Price]: SPY (Expires at: 03:25:40 a. m.)`
+
 ## 🛠 Project Structure
 
-- `src/etf`: Contains the main logic for ETF data fetching.
-  - `etf.controller.ts`: Handles incoming HTTP requests.
-  - `etf.service.ts`: Interacts with `yahoo-finance2` API.
-  - `etf.module.ts`: Module definition.
+- `src/etf/`: Modularized feature folders.
+  - `core/`: Basic ETF info and price fetching.
+  - `history/`: Chart and dividend data.
+  - `insights/`: Technical analysis and holdings.
+  - `reports/`: News and consolidated reports.
+  - `search/`: Search functionality.
+  - `discover/`: Featured instruments.
+- `src/common/`: Shared constants and utilities.
+  - `constants/cache.constants.ts`: Centralized cache TTLs.
+- `src/provider/`: External API initializations.
 
 ## 📚 Dependencies
 
-- **NestJS**: Framework.
-- **yahoo-finance2**: Wrapper for Yahoo Finance API.
+- **NestJS**: Main framework.
+- **yahoo-finance2**: Data source.
+- **@nestjs/cache-manager**: Caching infrastructure.
+- **cache-manager**: In-memory storage.
 
 
 ## 📖 Swagger Documentation
