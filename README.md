@@ -59,6 +59,36 @@ Retrieve the current price quote for a specific ETF.
 - **Example:** `/etf/SPY/price`
 - **Response:** JSON object with price and quote information.
 
+### 4. Get Daily History
+Retrieve historical data with intervals of 1 day or greater. Supports predefined ranges or custom dates.
+
+- **URL:** `/etf/:symbol/history/daily`
+- **Method:** `GET`
+- **Parameters:**
+    - `interval` (optional): `1d`, `5d`, `1wk`, `1mo`, `3mo`. Default: `1d`.
+    - `range` (optional): `1d`, `5d`, `1mo`, `3mo`, `6mo`, `1y`, `2y`, `5y`, `10y`, `ytd`, `max`.
+    - `from` (optional): Start date (YYYY-MM-DD).
+    - `to` (optional): End date (YYYY-MM-DD).
+- **Note:** `range` and `from`/`to` are mutually exclusive.
+- **Example:** `/etf/SPY/history/daily?range=1y&interval=1wk`
+
+### 5. Get Intraday History
+Retrieve historical data with intraday intervals (minutes/hours). Restricted to the last 730 days.
+
+- **URL:** `/etf/:symbol/history/intraday`
+- **Method:** `GET`
+- **Parameters:**
+    - `interval` (optional): `1m`, `2m`, `5m`, `15m`, `30m`, `60m`, `90m`, `1h`. Default: `1m`.
+    - `from` (optional): Start date (YYYY-MM-DD).
+    - `to` (optional): End date (YYYY-MM-DD).
+- **Example:** `/etf/QQQ/history/intraday?interval=1h&from=2024-01-01&to=2024-01-02`
+
+## 📖 Swagger Documentation
+
+Interactive API documentation is available when the server is running:
+
+- **URL:** `http://localhost:3000/api`
+
 ## 🛠 Project Structure
 
 - `src/etf`: Contains the main logic for ETF data fetching.
