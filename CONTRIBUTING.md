@@ -16,6 +16,7 @@ Create a Data Transfer Object (DTO) if your endpoint requires query parameters o
 - Inject the `CACHE_MANAGER` and `YAHOO_FINANCE_INSTANCE`.
 - Follow the **Cache Pattern** (Check Cache -> Fetch Source -> Store in Cache with Metadata).
 - Always include logging for HIT/MISS status and expiration time.
+- **Unit Tests**: Implement unit tests for your logic. See the [Testing Guide](file:///e:/Desarrollos/antigravity/fetchETF/TESTING.md) for templates and instructions.
 
 ### 4. Create/Update the Controller
 - Define your endpoint using standard NestJS decorators.
