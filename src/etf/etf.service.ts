@@ -75,4 +75,13 @@ export class EtfService {
             throw error;
         }
     }
+
+    async getEtfRecommendations(symbol: string) {
+        try {
+            return await yahooFinance.recommendationsBySymbol(symbol);
+        } catch (error) {
+            console.error(`Error fetching recommendations for ${symbol}:`, error);
+            throw error;
+        }
+    }
 }

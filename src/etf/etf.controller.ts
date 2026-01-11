@@ -56,4 +56,12 @@ export class EtfController {
     async getEtfNews(@Param('symbol') symbol: string) {
         return this.etfService.getEtfNews(symbol);
     }
+
+    @Get(':symbol/recommendations')
+    @ApiOperation({ summary: 'Get ETF Recommendations', description: 'Fetch symbol recommendations and insights' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'List of recommended symbols' })
+    async getEtfRecommendations(@Param('symbol') symbol: string) {
+        return this.etfService.getEtfRecommendations(symbol);
+    }
 }

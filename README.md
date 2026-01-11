@@ -97,6 +97,14 @@ Retrieve the latest news headlines and links for a specific ETF.
 - **Example:** `/etf/SPY/news`
 - **Response:** JSON array of news articles.
 
+### 7. Get ETF Recommendations
+Retrieve symbol recommendations and insights for tickers similar to the specified ETF.
+
+- **URL:** `/etf/:symbol/recommendations`
+- **Method:** `GET`
+- **Example:** `/etf/QQQ/recommendations`
+- **Response:** JSON object containing `recommendedSymbols` with names and relevance scores.
+
 ## 🛠 Project Structure
 
 - `src/etf`: Contains the main logic for ETF data fetching.
