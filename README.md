@@ -105,6 +105,27 @@ Retrieve symbol recommendations and insights for tickers similar to the specifie
 - **Example:** `/etf/QQQ/recommendations`
 - **Response:** JSON object containing `recommendedSymbols` with names and relevance scores.
 
+### 8. Get ETF Dividends
+Retrieve historical dividend payments for the specified ETF.
+
+- **URL:** `/etf/:symbol/dividends`
+- **Method:** `GET`
+- **Example:** `/etf/SPY/dividends`
+
+### 9. Get ETF Technical Insights
+Retrieve automated technical analysis insights for the ETF.
+
+- **URL:** `/etf/:symbol/insights`
+- **Method:** `GET`
+- **Example:** `/etf/QQQ/insights`
+
+### 10. Get ETF Holdings and Composition
+Retrieve a list of the ETF's top holdings, its performance metrics, and profile.
+
+- **URL:** `/etf/:symbol/holdings`
+- **Method:** `GET`
+- **Example:** `/etf/VOO/holdings`
+
 ## 🛠 Project Structure
 
 - `src/etf`: Contains the main logic for ETF data fetching.

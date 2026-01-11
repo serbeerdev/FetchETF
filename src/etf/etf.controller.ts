@@ -64,4 +64,28 @@ export class EtfController {
     async getEtfRecommendations(@Param('symbol') symbol: string) {
         return this.etfService.getEtfRecommendations(symbol);
     }
+
+    @Get(':symbol/dividends')
+    @ApiOperation({ summary: 'Get ETF Dividends', description: 'Fetch historical dividend payments for the ETF' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'List of historical dividend payments' })
+    async getEtfDividends(@Param('symbol') symbol: string) {
+        return this.etfService.getEtfDividends(symbol);
+    }
+
+    @Get(':symbol/insights')
+    @ApiOperation({ summary: 'Get ETF Technical Insights', description: 'Fetch automated technical analysis and market insights' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'Technical analysis insights' })
+    async getEtfInsights(@Param('symbol') symbol: string) {
+        return this.etfService.getEtfInsights(symbol);
+    }
+
+    @Get(':symbol/holdings')
+    @ApiOperation({ summary: 'Get ETF Holdings and Composition', description: 'Fetch top holdings, performance, and asset profile' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'Holdings and fund composition data' })
+    async getEtfHoldings(@Param('symbol') symbol: string) {
+        return this.etfService.getEtfHoldings(symbol);
+    }
 }

@@ -84,4 +84,38 @@ export class EtfService {
             throw error;
         }
     }
+
+    async getEtfDividends(symbol: string) {
+        try {
+            // Fetch all historical dividends since the beginning
+            return await yahooFinance.historical(symbol, {
+                period1: '1970-01-01',
+                period2: new Date().toISOString().split('T')[0],
+                events: 'dividends',
+            });
+        } catch (error) {
+            console.error(`Error fetching dividends for ${symbol}:`, error);
+            throw error;
+        }
+    }
+
+    async getEtfInsights(symbol: string) {
+        try {
+            return await yahooFinance.insights(symbol);
+        } catch (error) {
+            console.error(`Error fetching insights for ${symbol}:`, error);
+            throw error;
+        }
+    }
+
+    async getEtfHoldings(symbol: string) {
+        try {
+            return await yahooFinance.quoteSummary(symbol, {
+                modules: ['topHoldings', 'fundPerformance', 'assetProfile'],
+            });
+        } catch (error) {
+            console.error(`Error fetching holdings for ${symbol}:`, error);
+            throw error;
+        }
+    }
 }
