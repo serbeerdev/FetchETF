@@ -23,10 +23,25 @@ This project is a NestJS-based backend service designed to fetch and provide dat
 
 ### Running the Application
 
+#### Standard Mode (Local)
 To run the application in development mode:
 
 ```bash
 npm run start:dev
+```
+
+#### Docker Mode (Production ready)
+To build and run the application using Docker:
+
+```bash
+# Build and start in the background
+docker-compose up --build -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
 ```
 
 The server will start (usually on port 3000).

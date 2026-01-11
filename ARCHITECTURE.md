@@ -62,8 +62,20 @@ We use a Global Exception Filter located in `src/common/filters/http-exception.f
   }
   ```
 
-## 🚀 Scalability
+## 🚀 Deployment & Infrastructure
 
+### 🐳 Containerization
+The service is fully containerized using a **multi-stage Dockerfile**. This ensures that the production image is minimal, containing only the compiled code and production dependencies.
+
+- **Stage 1 (Builder)**: Uses `node:20-alpine` to install all dependencies and build the TypeScript project (`dist` folder).
+- **Stage 2 (Runner)**: Uses the same lightweight base image, copies only the `dist` and `package.json`, and installs only production dependencies.
+
+### 🏗 Orchestration
+We use **Docker Compose** to simplify the lifecycle of the container:
+- **Build**: `docker-compose build`
+- **Execution**: `docker-compose up -d`
+
+## 🚀 Scalability
 The architecture is prepared for growth:
 - **Redis Ready**: The L1 in-memory cache can be swapped for a Distributed Redis cache in `AppModule` without touching any business logic.
-- **Microservices**: Each domain folder in `src/etf` is a candidate to be extracted into its own microservice if the load increases.
+- **Stateless Design**: Since the app is stateless (relying on cache/external API), it can be horizontally scaled using any container orchestrator (Kubernetes, AWS ECS, etc.).

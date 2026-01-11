@@ -14,6 +14,20 @@ By default, the project runs with sensible defaults for local development. Howev
 | `CACHE_TYPE` | Type of cache (experimental). | `memory` |
 | `LOG_LEVEL` | Level of logging detail. | `log` |
 
+## 🐳 Docker Environment
+
+When running via **Docker Compose**, environment variables are managed in the `environment` section of the `docker-compose.yml` file.
+
+```yaml
+services:
+  app:
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+```
+
+To use a `.env` file with Docker, you can add `env_file: .env` to the service configuration in `docker-compose.yml`.
+
 ## 📦 Prerequisites
 
 - **Node.js**: v18 or higher.
