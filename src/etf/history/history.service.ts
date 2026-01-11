@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_TTLS } from '../../common/constants/cache.constants';
 
 @Injectable()
 export class HistoryService {
@@ -40,7 +41,7 @@ export class HistoryService {
             }
 
             const data = await this.yahooFinance.chart(symbol, queryOptions);
-            await this.cacheManager.set(cacheKey, data, 60 * 60 * 1000); // 1 hour
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.HISTORY);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching history for ${symbol}:`, error);
@@ -64,7 +65,7 @@ export class HistoryService {
                 period2: new Date().toISOString().split('T')[0],
                 events: 'dividends',
             });
-            await this.cacheManager.set(cacheKey, data, 60 * 60 * 1000); // 1 hour
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.DIVIDENDS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching dividends for ${symbol}:`, error);

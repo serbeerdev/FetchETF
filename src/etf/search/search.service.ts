@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_TTLS } from '../../common/constants/cache.constants';
 
 @Injectable()
 export class SearchService {
@@ -22,7 +23,7 @@ export class SearchService {
         this.logger.log(`Cache MISS [Search]: ${query} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.search(query);
-            await this.cacheManager.set(cacheKey, data, 5 * 60 * 1000); // 5 minutes
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.SEARCH);
             return data;
         } catch (error) {
             this.logger.error(`Error searching for ${query}:`, error);

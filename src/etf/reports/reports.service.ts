@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_TTLS } from '../../common/constants/cache.constants';
 import { CoreDataService } from '../core/core-data.service';
 import { InsightsService } from '../insights/insights.service';
 
@@ -27,7 +28,7 @@ export class ReportsService {
         try {
             const result = await this.yahooFinance.search(symbol, { newsCount: 10 }) as any;
             const data = result.news;
-            await this.cacheManager.set(cacheKey, data, 15 * 60 * 1000); // 15 minutes
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.NEWS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching news for ${symbol}:`, error);
@@ -67,7 +68,7 @@ export class ReportsService {
             recommendations: recommendations.status === 'fulfilled' ? recommendations.value : [],
         };
 
-        await this.cacheManager.set(cacheKey, report, 30 * 1000); // 30 seconds
+        await this.cacheManager.set(cacheKey, report, CACHE_TTLS.FULL_REPORT);
         return report;
     }
 }

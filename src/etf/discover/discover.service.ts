@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_TTLS } from '../../common/constants/cache.constants';
 
 @Injectable()
 export class DiscoverService {
@@ -24,7 +25,7 @@ export class DiscoverService {
         this.logger.log('Cache MISS [Discover]: Featured ETFs list - Fetching from Yahoo Finance');
         try {
             const data = await this.yahooFinance.quote(this.featuredSymbols);
-            await this.cacheManager.set(cacheKey, data, 60 * 60 * 1000); // 1 hour
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.FEATURED_LIST);
             return data;
         } catch (error) {
             this.logger.error('Error fetching featured ETFs:', error);

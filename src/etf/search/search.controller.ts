@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { CACHE_LABELS } from '../../common/constants/cache.constants';
 import { SearchService } from './search.service';
 
 @ApiTags('Search')
@@ -9,7 +10,7 @@ export class SearchController {
 
     @Get(':query')
     @ApiOperation({
-        summary: 'Search for ETFs (Cache: 5m)',
+        summary: `Search for ETFs (Cache: ${CACHE_LABELS.SEARCH})`,
         description: 'Searches for ETFs and other financial instruments by symbol or name using Yahoo Finance search engine.'
     })
     @ApiParam({ name: 'query', description: 'Search term for ETF' })

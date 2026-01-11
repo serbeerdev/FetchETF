@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { CACHE_LABELS } from '../../common/constants/cache.constants';
 import { InsightsService } from './insights.service';
 
 @ApiTags('Insights')
@@ -9,7 +10,7 @@ export class InsightsController {
 
     @Get(':symbol/recommendations')
     @ApiOperation({
-        summary: 'Get ETF Recommendations (Cache: 1h)',
+        summary: `Get ETF Recommendations (Cache: ${CACHE_LABELS.RECOMMENDATIONS})`,
         description: 'Analyzes the ETF and returns a list of similar or related financial instruments based on market correlation.'
     })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
@@ -20,7 +21,7 @@ export class InsightsController {
 
     @Get(':symbol/insights')
     @ApiOperation({
-        summary: 'Get ETF Technical Insights (Cache: 24h)',
+        summary: `Get ETF Technical Insights (Cache: ${CACHE_LABELS.INSIGHTS})`,
         description: 'Provides automated technical analysis, including support/resistance levels and market trend indicators.'
     })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
@@ -31,7 +32,7 @@ export class InsightsController {
 
     @Get(':symbol/holdings')
     @ApiOperation({
-        summary: 'Get ETF Holdings and Composition (Cache: 24h)',
+        summary: `Get ETF Holdings and Composition (Cache: ${CACHE_LABELS.HOLDINGS})`,
         description: 'Returns the top 10 holdings of the ETF along with asset allocation and fund performance metrics.'
     })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })

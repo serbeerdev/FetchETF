@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_TTLS } from '../../common/constants/cache.constants';
 
 @Injectable()
 export class InsightsService {
@@ -22,7 +23,7 @@ export class InsightsService {
         this.logger.log(`Cache MISS [Recommendations]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.recommendationsBySymbol(symbol);
-            await this.cacheManager.set(cacheKey, data, 60 * 60 * 1000); // 1 hour
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.RECOMMENDATIONS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching recommendations for ${symbol}:`, error);
@@ -42,7 +43,7 @@ export class InsightsService {
         this.logger.log(`Cache MISS [Insights]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.insights(symbol);
-            await this.cacheManager.set(cacheKey, data, 24 * 60 * 60 * 1000); // 24 hours
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.INSIGHTS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching insights for ${symbol}:`, error);
@@ -64,7 +65,7 @@ export class InsightsService {
             const data = await this.yahooFinance.quoteSummary(symbol, {
                 modules: ['topHoldings', 'fundPerformance', 'assetProfile'],
             });
-            await this.cacheManager.set(cacheKey, data, 24 * 60 * 60 * 1000); // 24 hours
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.HOLDINGS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching holdings for ${symbol}:`, error);

@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_TTLS } from '../../common/constants/cache.constants';
 
 @Injectable()
 export class CoreDataService {
@@ -22,7 +23,7 @@ export class CoreDataService {
         this.logger.log(`Cache MISS [Info]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryProfile', 'fundProfile'] });
-            await this.cacheManager.set(cacheKey, data, 24 * 60 * 60 * 1000); // 24 hours
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.INFO);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching info for ${symbol}:`, error);
@@ -42,7 +43,7 @@ export class CoreDataService {
         this.logger.log(`Cache MISS [Price]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.quote(symbol);
-            await this.cacheManager.set(cacheKey, data, 60 * 1000); // 60 seconds
+            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.PRICE);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching price for ${symbol}:`, error);

@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { CACHE_LABELS } from '../../common/constants/cache.constants';
 import { CoreDataService } from './core-data.service';
 
 @ApiTags('Core Data')
@@ -9,7 +10,7 @@ export class CoreDataController {
 
     @Get(':symbol')
     @ApiOperation({
-        summary: 'Get ETF Information (Cache: 24h)',
+        summary: `Get ETF Information (Cache: ${CACHE_LABELS.INFO})`,
         description: 'Retrieves comprehensive ETF metadata including price history summary, fund profile, and summary profile.'
     })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol (e.g. SPY)' })
@@ -20,7 +21,7 @@ export class CoreDataController {
 
     @Get(':symbol/price')
     @ApiOperation({
-        summary: 'Get ETF Price (Cache: 60s)',
+        summary: `Get ETF Price (Cache: ${CACHE_LABELS.PRICE})`,
         description: 'Returns the current real-time or delayed market price data for the specified ETF symbol.'
     })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
