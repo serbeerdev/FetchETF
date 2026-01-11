@@ -1,8 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class HistoryService {
+    private readonly logger = new Logger(HistoryService.name);
+
     constructor(
         @Inject('YAHOO_FINANCE_INSTANCE') private readonly yahooFinance: any,
         @Inject(CACHE_MANAGER) private cacheManager: any,
@@ -11,8 +13,13 @@ export class HistoryService {
     async getEtfHistory(symbol: string, query: { interval?: string; from?: string; to?: string; range?: string }) {
         const cacheKey = `etf_history_${symbol}_${JSON.stringify(query)}`;
         const cachedData = await this.cacheManager.get(cacheKey);
-        if (cachedData) return cachedData;
 
+        if (cachedData) {
+            this.logger.log(`Cache HIT [History]: ${symbol}`);
+            return cachedData;
+        }
+
+        this.logger.log(`Cache MISS [History]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const queryOptions: any = {
                 interval: query.interval,
@@ -36,7 +43,7 @@ export class HistoryService {
             await this.cacheManager.set(cacheKey, data, 60 * 60 * 1000); // 1 hour
             return data;
         } catch (error) {
-            console.error(`Error fetching history for ${symbol}:`, error);
+            this.logger.error(`Error fetching history for ${symbol}:`, error);
             throw error;
         }
     }
@@ -44,8 +51,13 @@ export class HistoryService {
     async getEtfDividends(symbol: string) {
         const cacheKey = `etf_dividends_${symbol}`;
         const cachedData = await this.cacheManager.get(cacheKey);
-        if (cachedData) return cachedData;
 
+        if (cachedData) {
+            this.logger.log(`Cache HIT [Dividends]: ${symbol}`);
+            return cachedData;
+        }
+
+        this.logger.log(`Cache MISS [Dividends]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.historical(symbol, {
                 period1: '1970-01-01',
@@ -55,7 +67,7 @@ export class HistoryService {
             await this.cacheManager.set(cacheKey, data, 60 * 60 * 1000); // 1 hour
             return data;
         } catch (error) {
-            console.error(`Error fetching dividends for ${symbol}:`, error);
+            this.logger.error(`Error fetching dividends for ${symbol}:`, error);
             throw error;
         }
     }

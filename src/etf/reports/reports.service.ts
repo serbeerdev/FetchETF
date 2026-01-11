@@ -1,10 +1,12 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { CoreDataService } from '../core/core-data.service';
 import { InsightsService } from '../insights/insights.service';
 
 @Injectable()
 export class ReportsService {
+    private readonly logger = new Logger(ReportsService.name);
+
     constructor(
         @Inject('YAHOO_FINANCE_INSTANCE') private readonly yahooFinance: any,
         @Inject(CACHE_MANAGER) private cacheManager: any,
@@ -15,15 +17,20 @@ export class ReportsService {
     async getEtfNews(symbol: string) {
         const cacheKey = `etf_news_${symbol}`;
         const cachedData = await this.cacheManager.get(cacheKey);
-        if (cachedData) return cachedData;
 
+        if (cachedData) {
+            this.logger.log(`Cache HIT [News]: ${symbol}`);
+            return cachedData;
+        }
+
+        this.logger.log(`Cache MISS [News]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const result = await this.yahooFinance.search(symbol, { newsCount: 10 }) as any;
             const data = result.news;
             await this.cacheManager.set(cacheKey, data, 15 * 60 * 1000); // 15 minutes
             return data;
         } catch (error) {
-            console.error(`Error fetching news for ${symbol}:`, error);
+            this.logger.error(`Error fetching news for ${symbol}:`, error);
             throw error;
         }
     }
@@ -31,8 +38,13 @@ export class ReportsService {
     async getEtfFullReport(symbol: string) {
         const cacheKey = `etf_full_report_${symbol}`;
         const cachedData = await this.cacheManager.get(cacheKey);
-        if (cachedData) return cachedData;
 
+        if (cachedData) {
+            this.logger.log(`Cache HIT [Full Report]: ${symbol}`);
+            return cachedData;
+        }
+
+        this.logger.log(`Cache MISS [Full Report]: ${symbol} - Consolidating data`);
         const results = await Promise.allSettled([
             this.coreDataService.getEtfInfo(symbol),
             this.coreDataService.getEtfPrice(symbol),
