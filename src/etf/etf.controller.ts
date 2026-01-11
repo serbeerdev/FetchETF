@@ -1,7 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { EtfService } from './etf.service';
-import { HistoryQueryDto } from './dto/history-query.dto';
+import { DailyHistoryQueryDto } from './dto/daily-history-query.dto';
+import { IntradayHistoryQueryDto } from './dto/intraday-history-query.dto';
 
 @ApiTags('etf')
 @Controller('etf')
@@ -32,11 +33,19 @@ export class EtfController {
         return this.etfService.getEtfPrice(symbol);
     }
 
-    @Get(':symbol/history')
-    @ApiOperation({ summary: 'Get ETF Historical Data' })
+    @Get(':symbol/history/daily')
+    @ApiOperation({ summary: 'Get ETF Daily History', description: 'Fetch historical data with intervals of 1d or greater' })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'Historical price data' })
-    async getEtfHistory(@Param('symbol') symbol: string, @Query() query: HistoryQueryDto) {
+    async getDailyHistory(@Param('symbol') symbol: string, @Query() query: DailyHistoryQueryDto) {
+        return this.etfService.getEtfHistory(symbol, query);
+    }
+
+    @Get(':symbol/history/intraday')
+    @ApiOperation({ summary: 'Get ETF Intraday History', description: 'Fetch historical data with intraday intervals (e.g. 1m, 1h)' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'Intraday price data' })
+    async getIntradayHistory(@Param('symbol') symbol: string, @Query() query: IntradayHistoryQueryDto) {
         return this.etfService.getEtfHistory(symbol, query);
     }
 }

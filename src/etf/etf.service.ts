@@ -33,19 +33,33 @@ export class EtfService {
             throw error;
         }
     }
-    async getEtfHistory(symbol: string, query: HistoryQueryDto) {
+    async getEtfHistory(symbol: string, query: { interval?: string; from?: string; to?: string; range?: string }) {
         try {
             const queryOptions: any = {
                 interval: query.interval,
             };
 
-            if (query.from) queryOptions.period1 = query.from;
-            if (query.to) queryOptions.period2 = query.to;
+            // Cannot use both range and period1/period2. 
+            // If specific dates are provided, use them. Otherwise, check for range.
+            if (query.from || query.to) {
+                if (query.from) queryOptions.period1 = query.from;
+                if (query.to) {
+                    queryOptions.period2 = query.to;
+                    // If from === to, yahoo-finance2 errors. Assume user wants the full day.
+                    // We need to ensure period2 is after period1.
+                    if (query.from === query.to) {
+                        const date = new Date(query.to);
+                        date.setDate(date.getDate() + 1);
+                        queryOptions.period2 = date.toISOString().split('T')[0]; // Keep YYYY-MM-DD format if possible, or ISO
+                    }
+                }
+            } else if (query.range) {
+                queryOptions.range = query.range;
+            }
 
-            // yahoo-finance2 is strict about options validation. 
-            // We must not pass 'from' and 'to' directly if they are not part of the defined schema.
-
-            return await yahooFinance.historical(symbol, queryOptions);
+            // yahoo-finance2 'historical' is deprecated and strict about intervals (only 1d, 1wk, 1mo).
+            // 'chart' supports intraday intervals (1m, 5m, 1h, etc.) and is the recommended replacement.
+            return await yahooFinance.chart(symbol, queryOptions);
         } catch (error) {
             console.error(`Error fetching history for ${symbol}:`, error);
             throw error;
