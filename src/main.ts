@@ -9,7 +9,11 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('FetchETF API')
-    .setDescription('The FetchETF API description')
+    .setDescription(
+      'A high-performance, modular API for fetching real-time and historical ETF data. ' +
+      'Features include advanced caching with expiration tracking, consolidated master reports, ' +
+      'technical insights, and discovery of featured instruments, all powered by Yahoo Finance.',
+    )
     .setVersion('1.0')
     .addTag('Search')
     .addTag('Core Data')
