@@ -11,6 +11,11 @@ async function bootstrap() {
     .setTitle('FetchETF API')
     .setDescription('The FetchETF API description')
     .setVersion('1.0')
+    .addTag('Search')
+    .addTag('Core Data')
+    .addTag('History')
+    .addTag('Insights')
+    .addTag('Reports & News')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
