@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import YahooFinance from 'yahoo-finance2';
+import { HistoryQueryDto } from './dto/history-query.dto';
 
 const yahooFinance = new YahooFinance();
 
@@ -29,6 +30,24 @@ export class EtfService {
             return await yahooFinance.search(query);
         } catch (error) {
             console.error(`Error searching for ${query}:`, error);
+            throw error;
+        }
+    }
+    async getEtfHistory(symbol: string, query: HistoryQueryDto) {
+        try {
+            const queryOptions: any = {
+                interval: query.interval,
+            };
+
+            if (query.from) queryOptions.period1 = query.from;
+            if (query.to) queryOptions.period2 = query.to;
+
+            // yahoo-finance2 is strict about options validation. 
+            // We must not pass 'from' and 'to' directly if they are not part of the defined schema.
+
+            return await yahooFinance.historical(symbol, queryOptions);
+        } catch (error) {
+            console.error(`Error fetching history for ${symbol}:`, error);
             throw error;
         }
     }

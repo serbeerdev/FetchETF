@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { EtfService } from './etf.service';
+import { HistoryQueryDto } from './dto/history-query.dto';
 
 @ApiTags('etf')
 @Controller('etf')
@@ -29,5 +30,13 @@ export class EtfController {
     @ApiResponse({ status: 200, description: 'Current price of the ETF' })
     async getEtfPrice(@Param('symbol') symbol: string) {
         return this.etfService.getEtfPrice(symbol);
+    }
+
+    @Get(':symbol/history')
+    @ApiOperation({ summary: 'Get ETF Historical Data' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'Historical price data' })
+    async getEtfHistory(@Param('symbol') symbol: string, @Query() query: HistoryQueryDto) {
+        return this.etfService.getEtfHistory(symbol, query);
     }
 }
