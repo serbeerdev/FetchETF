@@ -16,7 +16,7 @@ export class HistoryService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [History]: ${symbol} (Expires at: ${expiry})`);
             return cached.value;
         }
@@ -56,7 +56,7 @@ export class HistoryService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [Dividends]: ${symbol} (Expires at: ${expiry})`);
             return cached.value;
         }

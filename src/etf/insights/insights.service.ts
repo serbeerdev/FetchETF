@@ -16,7 +16,7 @@ export class InsightsService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [Recommendations]: ${symbol} (Expires at: ${expiry})`);
             return cached.value;
         }
@@ -38,7 +38,7 @@ export class InsightsService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [Insights]: ${symbol} (Expires at: ${expiry})`);
             return cached.value;
         }
@@ -60,7 +60,7 @@ export class InsightsService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [Holdings]: ${symbol} (Expires at: ${expiry})`);
             return cached.value;
         }

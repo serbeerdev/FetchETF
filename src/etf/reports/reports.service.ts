@@ -20,7 +20,7 @@ export class ReportsService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [News]: ${symbol} (Expires at: ${expiry})`);
             return cached.value;
         }
@@ -43,7 +43,7 @@ export class ReportsService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [Full Report]: ${symbol} (Expires at: ${expiry})`);
             return cached.value;
         }

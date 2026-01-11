@@ -16,7 +16,7 @@ export class SearchService {
         const cached: any = await this.cacheManager.get(cacheKey);
 
         if (cached) {
-            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            const expiry = new Date(cached.expiresAt).toLocaleString();
             this.logger.log(`Cache HIT [Search]: ${query} (Expires at: ${expiry})`);
             return cached.value;
         }
