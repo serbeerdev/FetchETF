@@ -83,12 +83,6 @@ Retrieve historical data with intraday intervals (minutes/hours). Restricted to 
     - `to` (optional): End date (YYYY-MM-DD).
 - **Example:** `/etf/QQQ/history/intraday?interval=1h&from=2024-01-01&to=2024-01-02`
 
-## 📖 Swagger Documentation
-
-Interactive API documentation is available when the server is running:
-
-- **URL:** `http://localhost:3000/api`
-
 ### 6. Get ETF News
 Retrieve the latest news headlines and links for a specific ETF.
 
@@ -126,6 +120,14 @@ Retrieve a list of the ETF's top holdings, its performance metrics, and profile.
 - **Method:** `GET`
 - **Example:** `/etf/VOO/holdings`
 
+### 11. Get Full ETF Report
+Consolidate details, price, news, holdings, insights, and recommendations in a single comprehensive report.
+
+- **URL:** `/etf/:symbol/report`
+- **Method:** `GET`
+- **Example:** `/etf/QQQ/report`
+- **Response:** A JSON object containing all major data modules for the ETF.
+
 ## 🛠 Project Structure
 
 - `src/etf`: Contains the main logic for ETF data fetching.
@@ -138,6 +140,10 @@ Retrieve a list of the ETF's top holdings, its performance metrics, and profile.
 - **NestJS**: Framework.
 - **yahoo-finance2**: Wrapper for Yahoo Finance API.
 
----
 
-*Generated for easy developer onboarding.*
+## 📖 Swagger Documentation
+
+Interactive API documentation is available when the server is running:
+
+- **URL:** `http://localhost:3000/api`
+ 

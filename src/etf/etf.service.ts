@@ -118,4 +118,28 @@ export class EtfService {
             throw error;
         }
     }
+
+    async getEtfFullReport(symbol: string) {
+        const results = await Promise.allSettled([
+            this.getEtfInfo(symbol),
+            this.getEtfPrice(symbol),
+            this.getEtfNews(symbol),
+            this.getEtfHoldings(symbol),
+            this.getEtfInsights(symbol),
+            this.getEtfRecommendations(symbol),
+        ]);
+
+        const [details, price, news, holdings, insights, recommendations] = results;
+
+        return {
+            symbol,
+            generatedAt: new Date().toISOString(),
+            details: details.status === 'fulfilled' ? details.value : { error: 'Failed to fetch details' },
+            price: price.status === 'fulfilled' ? price.value : { error: 'Failed to fetch price' },
+            news: news.status === 'fulfilled' ? news.value : [],
+            holdings: holdings.status === 'fulfilled' ? holdings.value : { error: 'Failed to fetch holdings' },
+            insights: insights.status === 'fulfilled' ? insights.value : { error: 'Failed to fetch insights' },
+            recommendations: recommendations.status === 'fulfilled' ? recommendations.value : [],
+        };
+    }
 }

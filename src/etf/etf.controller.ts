@@ -88,4 +88,12 @@ export class EtfController {
     async getEtfHoldings(@Param('symbol') symbol: string) {
         return this.etfService.getEtfHoldings(symbol);
     }
+
+    @Get(':symbol/report')
+    @ApiOperation({ summary: 'Get Full ETF Report', description: 'Consolidate info, price, news, holdings, insights, and recommendations in a single report' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'Comprehensive ETF data report' })
+    async getEtfFullReport(@Param('symbol') symbol: string) {
+        return this.etfService.getEtfFullReport(symbol);
+    }
 }
