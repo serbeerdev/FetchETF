@@ -13,11 +13,12 @@ export class HistoryService {
 
     async getEtfHistory(symbol: string, query: { interval?: string; from?: string; to?: string; range?: string }) {
         const cacheKey = `etf_history_${symbol}_${JSON.stringify(query)}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [History]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [History]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [History]: ${symbol} - Fetching from Yahoo Finance`);
@@ -41,7 +42,8 @@ export class HistoryService {
             }
 
             const data = await this.yahooFinance.chart(symbol, queryOptions);
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.HISTORY);
+            const expiresAt = Date.now() + CACHE_TTLS.HISTORY;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.HISTORY);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching history for ${symbol}:`, error);
@@ -51,11 +53,12 @@ export class HistoryService {
 
     async getEtfDividends(symbol: string) {
         const cacheKey = `etf_dividends_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Dividends]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Dividends]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Dividends]: ${symbol} - Fetching from Yahoo Finance`);
@@ -65,7 +68,8 @@ export class HistoryService {
                 period2: new Date().toISOString().split('T')[0],
                 events: 'dividends',
             });
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.DIVIDENDS);
+            const expiresAt = Date.now() + CACHE_TTLS.DIVIDENDS;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.DIVIDENDS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching dividends for ${symbol}:`, error);

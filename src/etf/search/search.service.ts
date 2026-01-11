@@ -13,17 +13,19 @@ export class SearchService {
 
     async searchEtf(query: string) {
         const cacheKey = `etf_search_${query}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Search]: ${query}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Search]: ${query} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Search]: ${query} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.search(query);
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.SEARCH);
+            const expiresAt = Date.now() + CACHE_TTLS.SEARCH;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.SEARCH);
             return data;
         } catch (error) {
             this.logger.error(`Error searching for ${query}:`, error);

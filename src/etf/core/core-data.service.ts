@@ -13,17 +13,19 @@ export class CoreDataService {
 
     async getEtfInfo(symbol: string) {
         const cacheKey = `etf_info_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Info]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Info]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Info]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.quoteSummary(symbol, { modules: ['price', 'summaryProfile', 'fundProfile'] });
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.INFO);
+            const expiresAt = Date.now() + CACHE_TTLS.INFO;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.INFO);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching info for ${symbol}:`, error);
@@ -33,17 +35,19 @@ export class CoreDataService {
 
     async getEtfPrice(symbol: string) {
         const cacheKey = `etf_price_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Price]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Price]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Price]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.quote(symbol);
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.PRICE);
+            const expiresAt = Date.now() + CACHE_TTLS.PRICE;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.PRICE);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching price for ${symbol}:`, error);

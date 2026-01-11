@@ -17,18 +17,20 @@ export class ReportsService {
 
     async getEtfNews(symbol: string) {
         const cacheKey = `etf_news_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [News]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [News]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [News]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const result = await this.yahooFinance.search(symbol, { newsCount: 10 }) as any;
             const data = result.news;
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.NEWS);
+            const expiresAt = Date.now() + CACHE_TTLS.NEWS;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.NEWS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching news for ${symbol}:`, error);
@@ -38,11 +40,12 @@ export class ReportsService {
 
     async getEtfFullReport(symbol: string) {
         const cacheKey = `etf_full_report_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Full Report]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Full Report]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Full Report]: ${symbol} - Consolidating data`);
@@ -68,7 +71,8 @@ export class ReportsService {
             recommendations: recommendations.status === 'fulfilled' ? recommendations.value : [],
         };
 
-        await this.cacheManager.set(cacheKey, report, CACHE_TTLS.FULL_REPORT);
+        const expiresAt = Date.now() + CACHE_TTLS.FULL_REPORT;
+        await this.cacheManager.set(cacheKey, { value: report, expiresAt }, CACHE_TTLS.FULL_REPORT);
         return report;
     }
 }

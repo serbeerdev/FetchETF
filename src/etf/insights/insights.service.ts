@@ -13,17 +13,19 @@ export class InsightsService {
 
     async getEtfRecommendations(symbol: string) {
         const cacheKey = `etf_recommendations_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Recommendations]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Recommendations]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Recommendations]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.recommendationsBySymbol(symbol);
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.RECOMMENDATIONS);
+            const expiresAt = Date.now() + CACHE_TTLS.RECOMMENDATIONS;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.RECOMMENDATIONS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching recommendations for ${symbol}:`, error);
@@ -33,17 +35,19 @@ export class InsightsService {
 
     async getEtfInsights(symbol: string) {
         const cacheKey = `etf_insights_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Insights]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Insights]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Insights]: ${symbol} - Fetching from Yahoo Finance`);
         try {
             const data = await this.yahooFinance.insights(symbol);
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.INSIGHTS);
+            const expiresAt = Date.now() + CACHE_TTLS.INSIGHTS;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.INSIGHTS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching insights for ${symbol}:`, error);
@@ -53,11 +57,12 @@ export class InsightsService {
 
     async getEtfHoldings(symbol: string) {
         const cacheKey = `etf_holdings_${symbol}`;
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log(`Cache HIT [Holdings]: ${symbol}`);
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Holdings]: ${symbol} (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log(`Cache MISS [Holdings]: ${symbol} - Fetching from Yahoo Finance`);
@@ -65,7 +70,8 @@ export class InsightsService {
             const data = await this.yahooFinance.quoteSummary(symbol, {
                 modules: ['topHoldings', 'fundPerformance', 'assetProfile'],
             });
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.HOLDINGS);
+            const expiresAt = Date.now() + CACHE_TTLS.HOLDINGS;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.HOLDINGS);
             return data;
         } catch (error) {
             this.logger.error(`Error fetching holdings for ${symbol}:`, error);

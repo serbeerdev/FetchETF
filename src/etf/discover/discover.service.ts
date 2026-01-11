@@ -15,17 +15,19 @@ export class DiscoverService {
 
     async getFeaturedEtfs() {
         const cacheKey = 'etf_featured_list';
-        const cachedData = await this.cacheManager.get(cacheKey);
+        const cached: any = await this.cacheManager.get(cacheKey);
 
-        if (cachedData) {
-            this.logger.log('Cache HIT [Discover]: Featured ETFs list');
-            return cachedData;
+        if (cached) {
+            const expiry = new Date(cached.expiresAt).toLocaleTimeString();
+            this.logger.log(`Cache HIT [Discover]: Featured ETFs list (Expires at: ${expiry})`);
+            return cached.value;
         }
 
         this.logger.log('Cache MISS [Discover]: Featured ETFs list - Fetching from Yahoo Finance');
         try {
             const data = await this.yahooFinance.quote(this.featuredSymbols);
-            await this.cacheManager.set(cacheKey, data, CACHE_TTLS.FEATURED_LIST);
+            const expiresAt = Date.now() + CACHE_TTLS.FEATURED_LIST;
+            await this.cacheManager.set(cacheKey, { value: data, expiresAt }, CACHE_TTLS.FEATURED_LIST);
             return data;
         } catch (error) {
             this.logger.error('Error fetching featured ETFs:', error);
