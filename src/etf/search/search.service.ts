@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import yahooFinance from 'yahoo-finance2';
+import { Injectable, Inject } from '@nestjs/common';
 
 @Injectable()
 export class SearchService {
+    constructor(@Inject('YAHOO_FINANCE_INSTANCE') private readonly yahooFinance: any) { }
+
     async searchEtf(query: string) {
         try {
-            return await yahooFinance.search(query);
+            return await this.yahooFinance.search(query);
         } catch (error) {
             console.error(`Error searching for ${query}:`, error);
             throw error;

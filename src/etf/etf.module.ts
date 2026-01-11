@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import YahooFinance from 'yahoo-finance2';
 import { SearchService } from './search/search.service';
 import { SearchController } from './search/search.controller';
 import { CoreDataService } from './core/core-data.service';
@@ -9,6 +10,8 @@ import { InsightsService } from './insights/insights.service';
 import { InsightsController } from './insights/insights.controller';
 import { ReportsService } from './reports/reports.service';
 import { ReportsController } from './reports/reports.controller';
+import { DiscoverService } from './discover/discover.service';
+import { DiscoverController } from './discover/discover.controller';
 
 @Module({
     controllers: [
@@ -17,13 +20,19 @@ import { ReportsController } from './reports/reports.controller';
         HistoryController,
         InsightsController,
         ReportsController,
+        DiscoverController,
     ],
     providers: [
+        {
+            provide: 'YAHOO_FINANCE_INSTANCE',
+            useFactory: () => new YahooFinance(),
+        },
         SearchService,
         CoreDataService,
         HistoryService,
         InsightsService,
         ReportsService,
+        DiscoverService,
     ],
 })
 export class EtfModule { }

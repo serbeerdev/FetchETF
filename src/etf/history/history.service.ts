@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import yahooFinance from 'yahoo-finance2';
+import { Injectable, Inject } from '@nestjs/common';
 
 @Injectable()
 export class HistoryService {
+    constructor(@Inject('YAHOO_FINANCE_INSTANCE') private readonly yahooFinance: any) { }
+
     async getEtfHistory(symbol: string, query: { interval?: string; from?: string; to?: string; range?: string }) {
         try {
             const queryOptions: any = {
@@ -23,7 +24,7 @@ export class HistoryService {
                 queryOptions.range = query.range;
             }
 
-            return await yahooFinance.chart(symbol, queryOptions);
+            return await this.yahooFinance.chart(symbol, queryOptions);
         } catch (error) {
             console.error(`Error fetching history for ${symbol}:`, error);
             throw error;
@@ -32,7 +33,7 @@ export class HistoryService {
 
     async getEtfDividends(symbol: string) {
         try {
-            return await yahooFinance.historical(symbol, {
+            return await this.yahooFinance.historical(symbol, {
                 period1: '1970-01-01',
                 period2: new Date().toISOString().split('T')[0],
                 events: 'dividends',

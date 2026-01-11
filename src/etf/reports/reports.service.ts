@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import yahooFinance from 'yahoo-finance2';
+import { Injectable, Inject } from '@nestjs/common';
 import { CoreDataService } from '../core/core-data.service';
 import { InsightsService } from '../insights/insights.service';
 
 @Injectable()
 export class ReportsService {
     constructor(
+        @Inject('YAHOO_FINANCE_INSTANCE') private readonly yahooFinance: any,
         private readonly coreDataService: CoreDataService,
         private readonly insightsService: InsightsService,
     ) { }
 
     async getEtfNews(symbol: string) {
         try {
-            const result = await yahooFinance.search(symbol, { newsCount: 10 }) as any;
+            const result = await this.yahooFinance.search(symbol, { newsCount: 10 }) as any;
             return result.news;
         } catch (error) {
             console.error(`Error fetching news for ${symbol}:`, error);

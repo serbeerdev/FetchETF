@@ -128,6 +128,13 @@ Consolidate details, price, news, holdings, insights, and recommendations in a s
 - **Example:** `/etf/QQQ/report`
 - **Response:** A JSON object containing all major data modules for the ETF.
 
+### 12. Get Featured ETFs
+Get a list of popular and high-performing ETFs (ESGV, QQQM, FTEC, SOXQ, VGK, IAUM, KOMP, EPP).
+
+- **URL:** `/etf/discover/featured`
+- **Method:** `GET`
+- **Response:** A JSON array of ETF quote objects.
+
 ## 🛠 Project Structure
 
 - `src/etf`: Contains the main logic for ETF data fetching.
