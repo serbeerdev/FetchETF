@@ -8,7 +8,10 @@ export class DiscoverController {
     constructor(private readonly discoverService: DiscoverService) { }
 
     @Get('featured')
-    @ApiOperation({ summary: 'Get Featured ETFs', description: 'Fetch a list of popular and high-performing ETFs' })
+    @ApiOperation({
+        summary: 'Get Featured ETFs (Cache: 1h)',
+        description: 'Returns a curated list of high-visibility and top-performing ETFs including QQQM, ESGV, FTEC, and others.'
+    })
     @ApiResponse({ status: 200, description: 'List of featured ETFs with basic quote data' })
     async getFeaturedEtfs() {
         return this.discoverService.getFeaturedEtfs();

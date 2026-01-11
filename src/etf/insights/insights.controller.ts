@@ -8,7 +8,10 @@ export class InsightsController {
     constructor(private readonly insightsService: InsightsService) { }
 
     @Get(':symbol/recommendations')
-    @ApiOperation({ summary: 'Get ETF Recommendations', description: 'Fetch symbol recommendations and insights' })
+    @ApiOperation({
+        summary: 'Get ETF Recommendations (Cache: 1h)',
+        description: 'Analyzes the ETF and returns a list of similar or related financial instruments based on market correlation.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'List of recommended symbols' })
     async getEtfRecommendations(@Param('symbol') symbol: string) {
@@ -16,7 +19,10 @@ export class InsightsController {
     }
 
     @Get(':symbol/insights')
-    @ApiOperation({ summary: 'Get ETF Technical Insights', description: 'Fetch automated technical analysis and market insights' })
+    @ApiOperation({
+        summary: 'Get ETF Technical Insights (Cache: 24h)',
+        description: 'Provides automated technical analysis, including support/resistance levels and market trend indicators.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'Technical analysis insights' })
     async getEtfInsights(@Param('symbol') symbol: string) {
@@ -24,7 +30,10 @@ export class InsightsController {
     }
 
     @Get(':symbol/holdings')
-    @ApiOperation({ summary: 'Get ETF Holdings and Composition', description: 'Fetch top holdings, performance, and asset profile' })
+    @ApiOperation({
+        summary: 'Get ETF Holdings and Composition (Cache: 24h)',
+        description: 'Returns the top 10 holdings of the ETF along with asset allocation and fund performance metrics.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'Holdings and fund composition data' })
     async getEtfHoldings(@Param('symbol') symbol: string) {

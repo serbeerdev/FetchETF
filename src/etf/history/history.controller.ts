@@ -10,7 +10,10 @@ export class HistoryController {
     constructor(private readonly historyService: HistoryService) { }
 
     @Get(':symbol/history/daily')
-    @ApiOperation({ summary: 'Get ETF Daily History', description: 'Fetch historical data with intervals of 1d or greater' })
+    @ApiOperation({
+        summary: 'Get ETF Daily History (Cache: 1h)',
+        description: 'Fetch historical daily price data. Supports large timeframes through the range parameter or specific date periods.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'Historical price data' })
     async getDailyHistory(@Param('symbol') symbol: string, @Query() query: DailyHistoryQueryDto) {
@@ -18,7 +21,10 @@ export class HistoryController {
     }
 
     @Get(':symbol/history/intraday')
-    @ApiOperation({ summary: 'Get ETF Intraday History', description: 'Fetch historical data with intraday intervals (e.g. 1m, 1h)' })
+    @ApiOperation({
+        summary: 'Get ETF Intraday History (Cache: 1h)',
+        description: 'Fetch granular intraday price data (e.g., 1-minute, 5-minute intervals) for technical analysis over short periods.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'Intraday price data' })
     async getIntradayHistory(@Param('symbol') symbol: string, @Query() query: IntradayHistoryQueryDto) {
@@ -26,7 +32,10 @@ export class HistoryController {
     }
 
     @Get(':symbol/dividends')
-    @ApiOperation({ summary: 'Get ETF Dividends', description: 'Fetch historical dividend payments for the ETF' })
+    @ApiOperation({
+        summary: 'Get ETF Dividends (Cache: 1h)',
+        description: 'Retrieves the complete historical dividend payment list for the specified ETF, including amounts and ex-dividend dates.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'List of historical dividend payments' })
     async getEtfDividends(@Param('symbol') symbol: string) {

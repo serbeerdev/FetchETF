@@ -8,7 +8,10 @@ export class ReportsController {
     constructor(private readonly reportsService: ReportsService) { }
 
     @Get(':symbol/news')
-    @ApiOperation({ summary: 'Get ETF News', description: 'Fetch latest news related to the ETF' })
+    @ApiOperation({
+        summary: 'Get ETF News (Cache: 15m)',
+        description: 'Fetches the 10 most recent news articles and press releases related to the specified ETF symbol.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'List of news articles' })
     async getEtfNews(@Param('symbol') symbol: string) {
@@ -16,7 +19,10 @@ export class ReportsController {
     }
 
     @Get(':symbol/report')
-    @ApiOperation({ summary: 'Get Full ETF Report', description: 'Consolidate info, price, news, holdings, insights, and recommendations in a single report' })
+    @ApiOperation({
+        summary: 'Get Full ETF Report (Cache: 30s)',
+        description: 'Consolidates data from all specialized services (price, news, holdings, insights) into a master report for quick analysis.'
+    })
     @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
     @ApiResponse({ status: 200, description: 'Comprehensive ETF data report' })
     async getEtfFullReport(@Param('symbol') symbol: string) {
