@@ -89,6 +89,14 @@ Interactive API documentation is available when the server is running:
 
 - **URL:** `http://localhost:3000/api`
 
+### 6. Get ETF News
+Retrieve the latest news headlines and links for a specific ETF.
+
+- **URL:** `/etf/:symbol/news`
+- **Method:** `GET`
+- **Example:** `/etf/SPY/news`
+- **Response:** JSON array of news articles.
+
 ## 🛠 Project Structure
 
 - `src/etf`: Contains the main logic for ETF data fetching.

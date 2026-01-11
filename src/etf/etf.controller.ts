@@ -48,4 +48,12 @@ export class EtfController {
     async getIntradayHistory(@Param('symbol') symbol: string, @Query() query: IntradayHistoryQueryDto) {
         return this.etfService.getEtfHistory(symbol, query);
     }
+
+    @Get(':symbol/news')
+    @ApiOperation({ summary: 'Get ETF News', description: 'Fetch latest news related to the ETF' })
+    @ApiParam({ name: 'symbol', description: 'ETF Symbol' })
+    @ApiResponse({ status: 200, description: 'List of news articles' })
+    async getEtfNews(@Param('symbol') symbol: string) {
+        return this.etfService.getEtfNews(symbol);
+    }
 }

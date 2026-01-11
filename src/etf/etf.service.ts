@@ -65,4 +65,14 @@ export class EtfService {
             throw error;
         }
     }
+
+    async getEtfNews(symbol: string) {
+        try {
+            const result = await yahooFinance.search(symbol, { newsCount: 10 });
+            return result.news;
+        } catch (error) {
+            console.error(`Error fetching news for ${symbol}:`, error);
+            throw error;
+        }
+    }
 }
