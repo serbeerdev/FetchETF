@@ -12,6 +12,8 @@ import { ReportsService } from './reports/reports.service';
 import { ReportsController } from './reports/reports.controller';
 import { DiscoverService } from './discover/discover.service';
 import { DiscoverController } from './discover/discover.controller';
+import { SparklineService } from './sparkline/sparkline.service';
+import { SparklineController } from './sparkline/sparkline.controller';
 
 @Module({
     controllers: [
@@ -21,6 +23,7 @@ import { DiscoverController } from './discover/discover.controller';
         InsightsController,
         ReportsController,
         DiscoverController,
+        SparklineController,
     ],
     providers: [
         {
@@ -33,6 +36,7 @@ import { DiscoverController } from './discover/discover.controller';
         InsightsService,
         ReportsService,
         DiscoverService,
+        SparklineService,
     ],
 })
 export class EtfModule { }

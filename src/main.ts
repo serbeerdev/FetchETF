@@ -12,7 +12,8 @@ async function bootstrap() {
     .setDescription(
       'A high-performance, modular API for fetching real-time and historical ETF data. ' +
       'Features include advanced caching with expiration tracking, consolidated master reports, ' +
-      'technical insights, and discovery of featured instruments, all powered by Yahoo Finance.',
+      'technical insights, discovery of featured instruments, and sparkline data for charts, ' +
+      'all powered by Yahoo Finance.',
     )
     .setVersion('1.0')
     .addTag('Search')
@@ -21,6 +22,7 @@ async function bootstrap() {
     .addTag('Insights')
     .addTag('Reports & News')
     .addTag('Discover')
+    .addTag('Sparkline')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
@@ -28,6 +30,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 8080);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
