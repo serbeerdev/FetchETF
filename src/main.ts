@@ -9,7 +9,11 @@ async function bootstrap() {
 
 
   app.enableCors({
-    origin: 'http://hoggwks8s0oc8ss0s8kwkw8k.136.248.241.227.salip.io',
+    origin: [
+      'http://hoggwks8s0oc8ss0s8kwkw8k.136.248.241.227.salip.io',
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ],
     credentials: true,
   });
 
