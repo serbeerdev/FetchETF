@@ -7,18 +7,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-
-  app.enableCors({
-    origin: [
-      'http://hoggwks8s0oc8ss0s8kwkw8k.136.248.241.227.salip.io',
-      'http://localhost:3000',
-      'http://localhost:3001',
-    ],
-    credentials: true,
-  });
-
-  // Para desarrollo
-  // app.enableCors();
+  app.enableCors()
 
   const config = new DocumentBuilder()
     .setTitle('FetchETF API')
