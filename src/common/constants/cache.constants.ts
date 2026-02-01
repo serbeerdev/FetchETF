@@ -10,6 +10,7 @@ export const CACHE_TTLS = {
     NEWS: 15 * 60 * 1000,           // 15 minutes
     FULL_REPORT: 30 * 1000,         // 30 seconds
     FEATURED_LIST: 60 * 60 * 1000,  // 1 hour
+    SPARKLINE: 60 * 60 * 1000,      // 1 hour
 };
 
 export const CACHE_LABELS = {
@@ -24,4 +25,5 @@ export const CACHE_LABELS = {
     NEWS: '15m',
     FULL_REPORT: '30s',
     FEATURED_LIST: '1h',
+    SPARKLINE: '1h',
 };

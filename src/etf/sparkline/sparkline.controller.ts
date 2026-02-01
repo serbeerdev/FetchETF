@@ -13,6 +13,7 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
+import { CACHE_LABELS } from '../../common/constants/cache.constants';
 import { SparklineService } from './sparkline.service';
 import { SparklineQueryDto, SparklinePeriod } from '../dto/sparkline-query.dto';
 
@@ -23,7 +24,7 @@ export class SparklineController {
 
   @Get(':symbol/sparkline')
   @ApiOperation({
-    summary: 'Get ETF Sparkline Data',
+    summary: `Get ETF Sparkline Data (Cache: ${CACHE_LABELS.SPARKLINE})`,
     description: `Returns compact historical price data optimized for sparkline charts. Data is automatically resampled based on the period and points parameters.
 
 **Resampling Logic:**
@@ -32,11 +33,7 @@ export class SparklineController {
 
 **Response Format:**
 - \`t\`: Unix timestamp in seconds (not milliseconds)
-- \`p\`: Closing price
-
-**Caching:**
-- 1m, 3m: 5 minutes TTL
-- 6m, 1y: 1 hour TTL`,
+- \`p\`: Closing price`,
   })
   @ApiParam({
     name: 'symbol',

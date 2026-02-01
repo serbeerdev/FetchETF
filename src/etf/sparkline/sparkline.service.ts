@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { CACHE_TTLS } from '../../common/constants/cache.constants';
+import { CACHE_TTLS, CACHE_LABELS } from '../../common/constants/cache.constants';
 import { SparklineQueryDto, SparklinePeriod } from '../dto/sparkline-query.dto';
 
 export interface SparklineDataPoint {
@@ -17,14 +17,6 @@ export interface SparklineResponse {
 @Injectable()
 export class SparklineService {
   private readonly logger = new Logger(SparklineService.name);
-
-  // Cache TTL based on period
-  private readonly CACHE_TTL_MAP = {
-    [SparklinePeriod.ONE_MONTH]: 5 * 60 * 1000, // 5 minutes
-    [SparklinePeriod.THREE_MONTHS]: 5 * 60 * 1000, // 5 minutes
-    [SparklinePeriod.SIX_MONTHS]: 60 * 60 * 1000, // 1 hour
-    [SparklinePeriod.ONE_YEAR]: 60 * 60 * 1000, // 1 hour
-  };
 
   constructor(
     @Inject('YAHOO_FINANCE_INSTANCE') private readonly yahooFinance: any,
@@ -44,7 +36,7 @@ export class SparklineService {
     if (cached) {
       const expiry = new Date(cached.expiresAt).toLocaleString();
       this.logger.log(
-        `Cache HIT [Sparkline]: ${symbol} (Expires at: ${expiry})`,
+        `Cache HIT [Sparkline]: ${symbol} (Cache: ${CACHE_LABELS.SPARKLINE}, Expires at: ${expiry})`,
       );
       return cached.value;
     }
@@ -76,7 +68,7 @@ export class SparklineService {
         data: resampledData,
       };
 
-      const ttl = this.CACHE_TTL_MAP[period];
+      const ttl = CACHE_TTLS.SPARKLINE;
       const expiresAt = Date.now() + ttl;
       await this.cacheManager.set(
         cacheKey,
